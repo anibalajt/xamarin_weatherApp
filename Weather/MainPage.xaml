@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Weather.MainPage">
+
+
+    <AbsoluteLayout x:Name="contentView">
+
+        <AbsoluteLayout.Margin>
+            <OnPlatform x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,0,0,25" />
+                <On Platform="Android, UWP" Value="0,0,0,0" />
+            </OnPlatform>
+        </AbsoluteLayout.Margin>
+        <Image x:Name="fullBackground"  
+                   Aspect="AspectFill"/>
+
+       
+
+        <Image AbsoluteLayout.LayoutFlags="PositionProportional"
+            AbsoluteLayout.LayoutBounds="0.03,0.05" Source="hamburger" HeightRequest="30" WidthRequest="30">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnNavigateButtonClicked" NumberOfTapsRequired="1"/>
+            </Image.GestureRecognizers>
+        </Image>
+        <Image AbsoluteLayout.LayoutFlags="PositionProportional"
+            AbsoluteLayout.LayoutBounds="0.97,0.05" Source="setting" HeightRequest="25" WidthRequest="25" >
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnSettinButtonClicked" NumberOfTapsRequired="1"/>
+            </Image.GestureRecognizers>
+        </Image>
+
+        <Grid AbsoluteLayout.LayoutBounds="0,0.2" HorizontalOptions="Start" Padding="20,10,20,0"
+                 AbsoluteLayout.LayoutFlags="PositionProportional" BackgroundColor="#33000000">
+            <Label x:Name="city" Grid.Row="0" TextColor="White" FontSize="30">Perth</Label>
+            <Label x:Name="lblTime" Grid.Row="1" TextColor="White" >3:20pm - Wednesday, 26 May 2021</Label>
+        </Grid>
+
+        <StackLayout AbsoluteLayout.LayoutBounds="0.5,1" Padding="20,0,20,20" BackgroundColor="#33000000"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"  Spacing="0">
+            <Label x:Name="temperature" Text="16°" FontSize="90" TextColor="White"/>
+            <Label x:Name="weatherDescription" Text="Sunny"  FontSize="20" TextColor="White"/>
+
+            <BoxView HeightRequest="1"
+             Margin="0, 10"
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="EndAndExpand"
+             Color="white" />
+
+            <Grid ColumnSpacing="0" RowSpacing="0">
+                <Grid Grid.Column="0">
+                    <Label Grid.Row="0" TextColor="White" HorizontalTextAlignment="Center">sunrise</Label>
+                    <Label x:Name="lblSunrise" Grid.Row="1" TextColor="White" HorizontalTextAlignment="Center" FontSize="14">14</Label>
+                    <Label x:Name="lblAmSunrise" Grid.Row="2" TextColor="White" HorizontalTextAlignment="Center">m/s</Label>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Label Grid.Row="0" TextColor="White" HorizontalTextAlignment="Center">sunset</Label>
+                    <Label x:Name="lblSunset" Grid.Row="1" TextColor="White" HorizontalTextAlignment="Center" FontSize="14">50</Label>
+                    <Label x:Name="lblAmPmSunset" Grid.Row="2" TextColor="White" HorizontalTextAlignment="Center">%</Label>
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Label Grid.Row="0" TextColor="White" HorizontalTextAlignment="Center">Humidity</Label>
+                    <Label x:Name="lblHumidity" Grid.Row="1" TextColor="White" HorizontalTextAlignment="Center" FontSize="14">70</Label>
+                    <Label Grid.Row="2" TextColor="White" HorizontalTextAlignment="Center">%</Label>
+                </Grid>
+            </Grid>
+
+
+        </StackLayout>
+
+
+        <Frame  x:Name="backgroundModal" BackgroundColor="#80000000" IsVisible="false">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnSettinButtonClicked"/>
+            </Frame.GestureRecognizers>
+        </Frame>
+        <StackLayout Padding="0,20,20,20" x:Name="modalSetting" WidthRequest="200"  BackgroundColor="#80000000" IsVisible="false"
+            AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.95,0.11"> 
+                 <Label Padding="25,0,0,0" Text="Edit List"   TextColor="White"/>
+
+                <BoxView HeightRequest="1"
+                 Margin="0, 10"
+                 HorizontalOptions="FillAndExpand"
+                 VerticalOptions="EndAndExpand"
+                 Color="#3c40435e" />
+                <FlexLayout>
+                    <Label x:Name="iconCelsius" Padding="5,0,0,5"  Text="&#x2714;" FontSize="14"  TextColor="Green"/>
+                    <Label Text="Celsius"   TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDegreesClicked"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </FlexLayout>
+                <BoxView HeightRequest="1"
+                 Margin="25, 10, 10, 0"
+                 HorizontalOptions="FillAndExpand"
+                 VerticalOptions="EndAndExpand"
+                 Color="#3c40435e" />
+                <FlexLayout>
+                    <Label Opacity="0" x:Name="iconFahrenheit" Padding="5,0,0,5"  Text="&#x2714;" FontSize="14"  TextColor="Green"/>
+                    <Label Text="Fahrenheit" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDegreesClicked"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </FlexLayout>
+       </StackLayout>
+    </AbsoluteLayout>
+</ContentPage>
