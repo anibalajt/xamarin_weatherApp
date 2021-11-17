@@ -20,7 +20,8 @@ namespace Weather.Services
 
         string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "cityDB.json");
 
-        public bool CreateFile() {
+        public bool CreateFile()
+        {
             try
             {
                 File.Create(fileName);
@@ -31,7 +32,7 @@ namespace Weather.Services
                 Console.WriteLine($"Error creating {name}", ex);
                 return false;
             }
-            
+
         }
         public bool FileExists()
         {
@@ -46,22 +47,46 @@ namespace Weather.Services
                 return false;
             }
         }
+        public bool DeleteCityFile(City cityDelete)
+        {
+            List<City> citiesJson = OpenFile();
+
+            bool citydeleted = false;
+
+            for (int i = citiesJson.Count - 1; i >= 0; i--)
+            {
+                if (citiesJson[i].CityName == cityDelete.CityName && citiesJson[i].Country == cityDelete.Country)
+                {
+                    citydeleted = true;
+                    citiesJson.RemoveAt(i);
+                }
+            }
+
+            //write file
+            if (citydeleted)
+            {
+                File.WriteAllText(fileName, JsonConvert.SerializeObject(citiesJson));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public bool WriteFile(City newCity, bool init)
         {
             //Open file to add new city
             if (init)
             {
-
                 List<City> listCity = new List<City>();
                 listCity.Add(newCity);
                 //write file
                 File.WriteAllText(fileName, JsonConvert.SerializeObject(listCity));
-
             }
             else
             {
                 List<City> citiesJson = OpenFile();
-               
+
                 bool cityExist = false;
                 foreach (City oldCity in citiesJson)
                 {
@@ -79,13 +104,12 @@ namespace Weather.Services
                 //write file
                 File.WriteAllText(fileName, JsonConvert.SerializeObject(citiesJson));
             }
-            
+
             return true;
         }
         public List<City> OpenFile()
         {
             string json = File.ReadAllText(fileName);
-            Console.WriteLine($"json  {json}");
             List<City> citiesJson = JsonConvert.DeserializeObject<List<City>>(json);
 
             return citiesJson;

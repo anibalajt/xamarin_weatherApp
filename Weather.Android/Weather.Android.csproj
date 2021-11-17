@@ -130,15 +130,7 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\clouds.jpeg">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable\clear.jpeg">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable\snow.jpeg">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
@@ -151,6 +143,14 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\thunderstorm.jpeg">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\snow.jpg">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\clouds.jpg">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

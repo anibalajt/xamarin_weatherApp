@@ -20,11 +20,11 @@ namespace Weather
         float ConstDegrees = 273.15f;
         SearchCity SearchCity = new SearchCity();
         FileService FileDB = new FileService();
-
+        
         public MainPage()
         {
             InitializeComponent();
-           
+
             Api = new ApiService();
 
             if (FileDB.FileExists())
@@ -61,7 +61,7 @@ namespace Weather
         protected override void OnAppearing()
         {
             //get data from modalView after closed it
-            if(SearchCity.lon!= null && SearchCity.lat!= null)
+            if (SearchCity.lon != null && SearchCity.lat != null)
             {
                 GetWeather(SearchCity.lat, SearchCity.lon, false);
             }
@@ -74,12 +74,20 @@ namespace Weather
         }
         async void OnNavigateButtonClicked(object sender, EventArgs e)
         {
+            SearchCity.EditListCity = false;
             await Navigation.PushModalAsync(SearchCity);
+        }
+        async void OnEditListCityClicked(object sender, EventArgs e)
+        {
+            SearchCity.EditListCity = true;
+            await Navigation.PushModalAsync(SearchCity);
+            modalSetting.IsVisible = false;
+            backgroundModal.IsVisible = false;
         }
         void OnDegreesClicked(object sender, EventArgs e)
         {
             Label label = (Label)sender;
-            if(label.Text == "Celsius")
+            if (label.Text == "Celsius")
             {
                 iconCelsius.Opacity = 1;
                 iconFahrenheit.Opacity = 0;
@@ -121,13 +129,14 @@ namespace Weather
                 Console.WriteLine("Faild", ex.Message, "OK");
             }
         }
-        async void GetWeather(string lat,string lon, bool init)
+        async void GetWeather(string lat, string lon, bool init)
         {
             string content = await Api.GetWeatherpByLonLat(lat, lon);
             weatherObject = Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherObject>(content);
-            if (init) {
-                City firstCity = new City() {Active = true, Lat = weatherObject.coord.lat.ToString(), Lon = weatherObject.coord.lon.ToString(), CityName = weatherObject.name, Country = weatherObject.sys.country };
-                 
+            if (init)
+            {
+                City firstCity = new City() { Active = true, Lat = weatherObject.coord.lat.ToString(), Lon = weatherObject.coord.lon.ToString(), CityName = weatherObject.name, Country = weatherObject.sys.country };
+
                 FileDB.WriteFile(firstCity, true);
             }
             updateWeather();
@@ -145,11 +154,19 @@ namespace Weather
 
             if (width > height)
             {
-                //containerView.Padding = new Thickness(40,10);
+                temperature.FontSize = 40;
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    footerView.Padding = new Thickness(50, 0, 20, 20);
+                    nameCityView.Padding = new Thickness(50, 10, 20, 0);
+                }
+
             }
             else
             {
-                //containerView.Padding = new Thickness(10, 40);
+                temperature.FontSize = 90;
+                footerView.Padding = new Thickness(20, 0, 20, 20);
+                nameCityView.Padding = new Thickness(20, 10, 20, 0);
             }
         }
         private void updateWeather()
@@ -157,13 +174,13 @@ namespace Weather
             city.Text = weatherObject.name;
 
             string d = Preferences.Get("Degree", "c");
-            if(d == "c")
+            if (d == "c")
             {
                 temperature.Text = String.Format("{0}°C", (weatherObject.main.temp - ConstDegrees).ToString("N0"));
             }
             else
             {
-                temperature.Text = String.Format("{0}°F", ((weatherObject.main.temp - ConstDegrees) * 9 / 5 + 32   ).ToString("N0"));
+                temperature.Text = String.Format("{0}°F", ((weatherObject.main.temp - ConstDegrees) * 9 / 5 + 32).ToString("N0"));
             }
             weatherDescription.Text = weatherObject.weather[0].main;
             lblHumidity.Text = weatherObject.main.humidity.ToString();
@@ -178,37 +195,38 @@ namespace Weather
             lblAmPmSunset.Text = dateTime[1];
 
             int code = weatherObject.weather[0].id;
-            Console.WriteLine($"weather {weatherObject.weather[0].main}");
-            //weatherObject.weather[0].id;
+            string fileExtencion = (Device.RuntimePlatform == Device.Android) ? "":".jpeg";
             //Thunderstorm      200 - 232
             if (code >= 200 && code <= 232)
             {
-                fullBackground.Source = "https://miro.medium.com/max/1400/0*BfwLwFRe8ETpsJaB";//ImageSource.FromFile("thunderstorm.jpeg");
+                fullBackground.Source = ImageSource.FromFile($"thunderstorm{fileExtencion}");
             }
             //Drizzle           300 - 321
             if (code >= 300 && code <= 321)
             {
-                fullBackground.Source = "https://miro.medium.com/max/1400/0*BfwLwFRe8ETpsJaB";//ImageSource.FromFile("drizzle.jpeg");
+                fullBackground.Source = ImageSource.FromFile($"drizzle{fileExtencion}");
             }
             //Rain              500 - 531
             if (code >= 500 && code <= 531)
             {
-                fullBackground.Source = "https://miro.medium.com/max/1400/0*BfwLwFRe8ETpsJaB";//ImageSource.FromFile("rain.jpeg");
+                fullBackground.Source = ImageSource.FromFile($"rain{fileExtencion}");
             }
-            //Snow              600 - 622
-            if (code >= 600 && code <= 622)
-            {
-                fullBackground.Source = "https://miro.medium.com/max/1400/0*BfwLwFRe8ETpsJaB";//ImageSource.FromFile("snow.jpeg");
-            }
+            
             //Clear             800
             if (code == 800)
             {
-                fullBackground.Source = "https://miro.medium.com/max/1400/0*BfwLwFRe8ETpsJaB";//ImageSource.FromFile("clear.jpeg");
+                fullBackground.Source = ImageSource.FromFile($"clear{fileExtencion}");
+            }
+            fileExtencion = (Device.RuntimePlatform == Device.Android) ? "" : ".jpg";
+            //Snow              600 - 622
+            if (code >= 600 && code <= 622)
+            {
+                fullBackground.Source = ImageSource.FromFile($"snow{fileExtencion}");
             }
             //Clouds            801 - 804
             if (code >= 801 && code <= 804)
             {
-                fullBackground.Source = "https://miro.medium.com/max/1400/0*BfwLwFRe8ETpsJaB";//ImageSource.FromFile("clouds.jpeg");
+                fullBackground.Source = ImageSource.FromFile($"clouds{fileExtencion}");
             }
 
         }

@@ -6,22 +6,17 @@
    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     ios:Page.UseSafeArea="true">
    <StackLayout>
-          <!--<StackLayout.Margin>
-            <OnPlatform x:TypeArguments="Thickness">
-                <On Platform="iOS" Value="0,0,0,25" />
-                <On Platform="Android, UWP" Value="0,0,0,20" />
-            </OnPlatform>
-        </StackLayout.Margin>-->
-            <SearchBar x:Name="searchBar" Placeholder="Search for a city"
-                TextChanged="OnSearchBarButtonPressed" />
+         
+    <SearchBar x:Name="searchBar" Placeholder="Search for a city"
+        TextChanged="OnSearchBarButtonPressed" />
+       <ScrollView VerticalScrollBarVisibility="Default">
+           <StackLayout x:Name="ListCities" Padding="20,0">
+           </StackLayout>
+       </ScrollView>
 
-             <ListView x:Name="searchResults" Footer="" ItemTapped="searchResults_ItemSelected">
-                 <ListView.ItemTemplate>
-                    <DataTemplate>
-                      <TextCell Text="{Binding CityName}" Detail="{Binding Country}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-             </ListView>
+
+       
+           
         <Button Text="back" Clicked="Button_Clicked"></Button>
        <!--<ListView x:Name="searchResults" />-->
     </StackLayout>

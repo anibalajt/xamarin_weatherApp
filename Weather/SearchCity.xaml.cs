@@ -13,28 +13,76 @@ namespace Weather
     public partial class SearchCity : ContentPage
     {
         ApiService api;
-        ObservableCollection<City> listSearchCity = new ObservableCollection<City>();
-        ObservableCollection<City> listCity = new ObservableCollection<City>();
-        //List<City> listCity = new List<City>();
+        List<City> listSearchCity =new List<City>();
+        List<City> listCity = new List<City>();
         FileService FileDB = new FileService();
-
+        public bool EditListCity = false;
         public string lat { get; set; }
         public string lon { get; set; }
         public SearchCity()
         {
             InitializeComponent();
-            //searchResults.ItemsSource = listSearchCity;
-
         }
+
         protected override void OnAppearing()
         {
-            listCity = new ObservableCollection<City>(FileDB.OpenFile());;
-            searchResults.ItemsSource = listCity;
+            listCity = FileDB.OpenFile();;
+            FillListView(listCity);
             base.OnAppearing();
+        }
+        void FillListView(List<City> listCity)
+        {
+            ListCities.Children.Clear();
+            foreach (City city in listCity)
+            {
+                Grid grid = new Grid();
+                grid.Children.Add(new Label()
+                {
+                    Text = city.CityName,
+                }, 0, 0);
+                grid.Children.Add(new Label()
+                {
+                    Text = city.Country,
+                    FontSize = 12
+                }, 0, 1);
+                //add delete button for the whole city, excluding the active city
+                if (EditListCity && !city.Active) {
+                    // add event click to remove city from file
+                    Button btn = new Button();
+                    btn.Text = "Remove";
+                    btn.Clicked += (object sender, EventArgs e) => {
+                        RemoveCity(city);
+                    };
+                    grid.Children.Add(btn, 1, 0);
+                }
+                //add event click to result list cities
+                TapGestureRecognizer tap = new TapGestureRecognizer();
+                tap.Tapped += (object sender, EventArgs e) =>
+                {
+                    searchResults_ItemSelected(city);
+                };
+                grid.GestureRecognizers.Add(tap);
+                //add the active city in the first position
+                if (city.Active) { 
+                    ListCities.Children.Insert(0, grid);
+                }
+                else
+                {
+                    ListCities.Children.Add(grid);
+                }
+            }
+        }
+        void RemoveCity(City city)
+        {
+           bool removed = FileDB.DeleteCityFile(city);
+            if (removed)
+            {
+                listCity = FileDB.OpenFile(); ;
+                FillListView(listCity);
+            }
         }
         protected override void OnDisappearing()
         {
-            //get data from modalView after closed it
             searchBar.Text = "";
             base.OnDisappearing();
         }
@@ -42,14 +90,12 @@ namespace Weather
         {
             await Navigation.PopModalAsync();
         }
-        private async void searchResults_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void searchResults_ItemSelected(City city)
         {
-            City selectedNote = searchResults.SelectedItem as City;
-
-            lat = selectedNote.Lat;
-            lon = selectedNote.Lon;
-            selectedNote.Active = true;
-            FileDB.WriteFile(selectedNote,false);
+            lat = city.Lat;
+            lon = city.Lon;
+            city.Active = true;
+            FileDB.WriteFile(city, false);
             await Navigation.PopModalAsync();
         }
         private async void OnSearchBarButtonPressed(object sender, EventArgs args)
@@ -61,14 +107,9 @@ namespace Weather
             listSearchCity.Clear();
             if (searchBar.Text.Length == 0)
             {
-                searchResults.ItemsSource = listCity;
+                FillListView(listCity);
                 return;
             }
-            else
-            {
-                searchResults.ItemsSource = listSearchCity;
-            }
-
             
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync($"{Constants.OpenStreetMapEndpoint}city={searchText}");
@@ -101,6 +142,7 @@ namespace Weather
                 }
 
             }
+            FillListView(listSearchCity);
         }
     }
 }

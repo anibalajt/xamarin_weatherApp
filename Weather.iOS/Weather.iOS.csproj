@@ -122,6 +122,12 @@
     <ImageAsset Include="Resources\Assets.xcassets\setting.imageset\setting-2.png" />
     <ImageAsset Include="Resources\Assets.xcassets\setting.imageset\Contents.json" />
     <ImageAsset Include="Resources\Assets.xcassets\setting.imageset\setting.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Small-40.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon58-1.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon87-1.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon120-1.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon180-1.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon60-1.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -147,8 +153,8 @@
     <BundleResource Include="Resources\thunderstorm.jpeg" />
     <BundleResource Include="Resources\drizzle.jpeg" />
     <BundleResource Include="Resources\rain.jpeg" />
-    <BundleResource Include="Resources\snow.jpeg" />
     <BundleResource Include="Resources\clear.jpeg" />
-    <BundleResource Include="Resources\clouds.jpeg" />
+    <BundleResource Include="Resources\snow.jpg" />
+    <BundleResource Include="Resources\clouds.jpg" />
   </ItemGroup>
 </Project>
